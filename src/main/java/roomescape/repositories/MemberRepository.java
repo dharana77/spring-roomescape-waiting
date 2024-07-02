@@ -13,6 +13,7 @@ public class MemberRepository {
 
   public Member save(String name, String email, String password, String role){
     String sql = "INSERT INTO MEMBER (name, email, password) VALUES (?, ?, ?, ?)";
+
     jdbcTemplate.update(sql, name, email, password);
     return Member.builder()
       .name(name)

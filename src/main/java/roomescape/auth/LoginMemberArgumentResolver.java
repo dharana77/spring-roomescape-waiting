@@ -11,6 +11,7 @@ import roomescape.config.TokenPropertiesConfig;
 import roomescape.enums.Role;
 import roomescape.service.MemberService;
 
+
 @Component
 public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
   private final MemberService memberService;
