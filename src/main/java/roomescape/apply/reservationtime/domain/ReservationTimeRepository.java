@@ -36,6 +36,7 @@ public interface ReservationTimeRepository {
                 Reservation r ON rt.id = r.time.id
                 AND r.reservationDate.date = :date
                 AND r.theme.id = :themeId
+                AND r.reservationStatus = 'RESERVED'
             """)
     List<AvailableReservationTimeResponse> findReservationTimesWithIsReservedInDateAndThemeId(@Param("date") String date,
                                                                                               @Param("themeId") long themeId);

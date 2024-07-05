@@ -21,8 +21,7 @@ public interface ReservationRepository {
             """)
     List<Reservation> findAllFetchJoinThemeAndTime();
 
-    @Query("SELECT r.id FROM Reservation r WHERE r.id = :id")
-    Optional<Long> findIdById(@Param("id") long id);
+    Optional<Reservation> findOneById(long id);
 
     void deleteById(long id);
 
@@ -34,8 +33,9 @@ public interface ReservationRepository {
                 WHERE
                     r.time.id = :timeId
                     AND r.theme.id = :themeId
+                    AND r.reservationStatus = 'RESERVED'
             """)
-    Optional<Long> findIdByTimeIdAndThemeId(@Param("timeId") long timeId, @Param("themeId") long themeId);
+    Optional<Long> findReservedIdByTimeIdAndThemeId(@Param("timeId") long timeId, @Param("themeId") long themeId);
 
     @Query("SELECT r.id FROM Reservation r WHERE r.time.id = :timeId")
     Optional<Long> findIdByTimeId(@Param("timeId") long timeId);
@@ -44,4 +44,7 @@ public interface ReservationRepository {
     Optional<Long> findIdByThemeId(@Param("themeId") long themeId);
 
     List<Reservation> searchReservationsBySearchParams(ReservationSearchParams searchParams);
+
+    @Query("SELECT r FROM Reservation r WHERE r.memberId = :memberId")
+    List<Reservation> findAllByMemberId(@Param("memberId") long memberId);
 }

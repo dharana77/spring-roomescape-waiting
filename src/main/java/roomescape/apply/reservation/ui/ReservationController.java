@@ -9,6 +9,7 @@ import roomescape.apply.member.domain.MemberRoleName;
 import roomescape.apply.reservation.application.ReservationCanceler;
 import roomescape.apply.reservation.application.ReservationFinder;
 import roomescape.apply.reservation.application.ReservationRecorder;
+import roomescape.apply.reservation.ui.dto.MyReservationResponse;
 import roomescape.apply.reservation.ui.dto.ReservationRequest;
 import roomescape.apply.reservation.ui.dto.ReservationResponse;
 
@@ -48,5 +49,11 @@ public class ReservationController {
     public ResponseEntity<Void> cancelReservation(@PathVariable("id") long id) {
         reservationCanceler.cancelReservation(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+
+    @GetMapping("/mine")
+    public ResponseEntity<List<MyReservationResponse>> getMemberReservations(LoginMember loginMember) {
+        return ResponseEntity.ok(reservationFinder.findAllCreatedByLoginMember(loginMember));
     }
 }

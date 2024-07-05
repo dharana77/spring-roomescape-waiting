@@ -22,6 +22,8 @@ public class Reservation {
                 foreignKey = @ForeignKey(name = "fk_reservation_to_theme"))
     private Theme theme;
     private Long memberId;
+    @Enumerated(EnumType.STRING)
+    private ReservationStatus reservationStatus = ReservationStatus.WAITING;
 
     protected Reservation() {
 
@@ -50,6 +52,14 @@ public class Reservation {
         this.id = id;
     }
 
+    public void reserve() {
+        this.reservationStatus = ReservationStatus.RESERVED;
+    }
+
+    public void cancel() {
+        this.reservationStatus = ReservationStatus.CANCELED;
+    }
+
     public Long getId() {
         return id;
     }
@@ -71,6 +81,10 @@ public class Reservation {
     }
 
     public Long getMemberId() {
-        return memberId.longValue();
+        return memberId;
+    }
+
+    public ReservationStatus getReservationStatus() {
+        return reservationStatus;
     }
 }

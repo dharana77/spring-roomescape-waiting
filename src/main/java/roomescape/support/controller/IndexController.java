@@ -31,4 +31,9 @@ public class IndexController {
         return "/signup";
     }
 
+    @GetMapping("/reservation-mine")
+    public String reservationMine() {
+        return "/reservation-mine";
+    }
+
 }

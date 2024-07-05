@@ -58,12 +58,6 @@ class FirstMissionStepTest extends BaseWebApplicationTest {
                 .delete("/reservations/1")
                 .then().log().all()
                 .statusCode(204);
-
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0));
     }
 
     @Test

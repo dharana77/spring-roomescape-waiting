@@ -8,6 +8,7 @@ import roomescape.apply.member.domain.MemberRepository;
 import roomescape.apply.member.infra.InMemoryMemberRepository;
 import roomescape.apply.reservation.domain.Reservation;
 import roomescape.apply.reservation.domain.ReservationRepository;
+import roomescape.apply.reservation.domain.ReservationStatus;
 import roomescape.apply.reservation.infra.InMemoryReservationRepository;
 import roomescape.apply.reservationtime.domain.ReservationTime;
 import roomescape.apply.reservationtime.domain.ReservationTimeRepository;
@@ -15,6 +16,8 @@ import roomescape.apply.reservationtime.infra.InMemoryReservationTimeRepository;
 import roomescape.apply.theme.domain.Theme;
 import roomescape.apply.theme.domain.ThemeRepository;
 import roomescape.apply.theme.infra.InMemoryThemeRepository;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static roomescape.support.MemberFixture.member;
@@ -50,7 +53,9 @@ class ReservationCancelerTest {
         // when
         reservationCanceler.cancelReservation(saved.getId());
         // then
-        assertThat(reservationRepository.findAllFetchJoinThemeAndTime()).isEmpty();
+        final List<Reservation> allFetchJoinThemeAndTime = reservationRepository.findAllFetchJoinThemeAndTime();
+        assertThat(allFetchJoinThemeAndTime).extracting("reservationStatus")
+                .containsExactlyInAnyOrder(ReservationStatus.CANCELED);
     }
 
 }

@@ -2,8 +2,10 @@ package roomescape.apply.reservation.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import roomescape.apply.auth.ui.dto.LoginMember;
 import roomescape.apply.member.ui.dto.MemberResponse;
 import roomescape.apply.reservation.domain.ReservationRepository;
+import roomescape.apply.reservation.ui.dto.MyReservationResponse;
 import roomescape.apply.reservation.ui.dto.ReservationAdminResponse;
 import roomescape.apply.reservation.ui.dto.ReservationResponse;
 
@@ -39,7 +41,7 @@ public class ReservationFinder {
     }
 
     public boolean doesReservationExist(long timeId, long themeId) {
-        Optional<Long> existedId = reservationRepository.findIdByTimeIdAndThemeId(timeId, themeId);
+        Optional<Long> existedId = reservationRepository.findReservedIdByTimeIdAndThemeId(timeId, themeId);
         return existedId.isPresent();
     }
 
@@ -51,4 +53,10 @@ public class ReservationFinder {
         return reservationRepository.findIdByThemeId(themeId);
     }
 
+    public List<MyReservationResponse> findAllCreatedByLoginMember(LoginMember memberId) {
+        return reservationRepository.findAllByMemberId(memberId.id())
+                .stream()
+                .map(it -> MyReservationResponse.from(it, it.getTheme(), it.getTime()))
+                .toList();
+    }
 }

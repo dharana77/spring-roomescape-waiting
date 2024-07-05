@@ -30,8 +30,8 @@ public class InMemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Optional<Long> findIdById(long id) {
-        return map.containsKey(id) ? Optional.of(id) : Optional.empty();
+    public Optional<Reservation> findOneById(long id) {
+        return map.containsKey(id) ? Optional.of(map.get(id)) : Optional.empty();
     }
 
     @Override
@@ -40,7 +40,7 @@ public class InMemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Optional<Long> findIdByTimeIdAndThemeId(long timeId, long themeId) {
+    public Optional<Long> findReservedIdByTimeIdAndThemeId(long timeId, long themeId) {
         return map.values().stream()
                 .filter(it -> timeId == it.getTime().getId())
                 .filter(it -> themeId == it.getTheme().getId())
@@ -75,6 +75,13 @@ public class InMemoryReservationRepository implements ReservationRepository {
                         || reservation.getReservationDate().isNotBefore(searchParams.dateFrom()))
                 .filter(reservation -> StringUtils.isEmpty(searchParams.dateTo())
                         || reservation.getReservationDate().isNotAfter(searchParams.dateTo()))
+                .toList();
+    }
+
+    @Override
+    public List<Reservation> findAllByMemberId(long memberId) {
+        return map.values().stream()
+                .filter(it -> it.getMemberId().equals(memberId))
                 .toList();
     }
 
