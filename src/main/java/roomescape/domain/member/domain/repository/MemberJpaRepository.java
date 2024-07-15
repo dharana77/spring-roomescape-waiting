@@ -15,6 +15,9 @@ import java.util.Optional;
 @Primary
 public class MemberJpaRepository implements MemberRepository {
 
+    private static final String EMAIL = "email";
+    private static final String PASSWORD = "password";
+
     private final EntityManager entityManager;
 
     public MemberJpaRepository(EntityManager entityManager) {
@@ -25,8 +28,9 @@ public class MemberJpaRepository implements MemberRepository {
     public Optional<Member> findByEmailAndPassword(String email, String password) {
         TypedQuery<Member> query = entityManager.createQuery(
                 "SELECT m FROM Member m WHERE m.email = :email AND m.password = :password", Member.class);
-        query.setParameter("email", email);
-        query.setParameter("password", password);
+
+        query.setParameter(EMAIL, email);
+        query.setParameter(PASSWORD, password);
         List<Member> result = query.getResultList();
         return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }

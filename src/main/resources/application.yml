@@ -5,12 +5,17 @@ spring:
   datasource:
     url: jdbc:h2:mem:testdb;MODE=MySQL
     driver-class-name: org.h2.Driver
-
   jpa:
+    defer-datasource-initialization: true
     properties:
       hibernate:
         show-sql: true
         format_sql: true
         highlight_sql: true
-    ddl-auto: create-drop
-    defer-datasource-initialization: true
+        ddl-auto: create-drop
+  sql:
+    init:
+      mode: always
+logging:
+  level:
+    org.hibernate.SQL: debug

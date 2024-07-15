@@ -15,7 +15,7 @@ import roomescape.domain.member.service.dto.MemberResponse;
 public class ApiLoginController {
 
     private static final String TOKEN = "token";
-    private static final int COOKIE_EXPIRATION_SECONDS = 3600;
+    private static final int ONE_HOUR_COOKIE_EXPIRATION_TIME = 3600;
 
     public ApiLoginController(MemberService memberService) {
         this.memberService = memberService;
@@ -29,7 +29,7 @@ public class ApiLoginController {
         ResponseCookie responseCookie = ResponseCookie.from(TOKEN, token)
                 .httpOnly(true)
                 .path("/")
-                .maxAge(COOKIE_EXPIRATION_SECONDS)
+                .maxAge(ONE_HOUR_COOKIE_EXPIRATION_TIME)
                 .build();
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, responseCookie.toString()).build();
     }

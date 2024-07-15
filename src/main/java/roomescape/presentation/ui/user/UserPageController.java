@@ -12,6 +12,11 @@ public class UserPageController {
         return "reservation";
     }
 
+    @GetMapping("/reservation-mine")
+    public String reservationMinePage() {
+        return "reservation-mine";
+    }
+
     @GetMapping("/login")
     public String loginPage() {
         return "login";

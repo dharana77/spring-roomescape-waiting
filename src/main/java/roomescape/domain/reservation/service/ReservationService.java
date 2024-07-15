@@ -10,16 +10,18 @@ import roomescape.domain.reservation.error.exception.ReservationErrorCode;
 import roomescape.domain.reservation.error.exception.ReservationException;
 import roomescape.domain.reservation.service.dto.AdminReservationRequest;
 import roomescape.domain.reservation.service.dto.ReservationRequest;
+import roomescape.domain.reservation.service.dto.ReservationResponse;
 import roomescape.domain.theme.domain.Theme;
 import roomescape.domain.theme.service.ThemeService;
 import roomescape.domain.time.domain.Time;
 import roomescape.domain.time.service.TimeService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static roomescape.utils.DateTimeCheckUtil.isBeforeCheck;
-import static roomescape.utils.FormatCheckUtil.reservationDateFormatCheck;
-import static roomescape.utils.FormatCheckUtil.reservationNameFormatCheck;
+import static roomescape.domain.reservation.utils.DateTimeCheckUtil.isBeforeCheck;
+import static roomescape.domain.reservation.utils.FormatCheckUtil.reservationDateFormatCheck;
+import static roomescape.domain.reservation.utils.FormatCheckUtil.reservationNameFormatCheck;
 
 @Service
 public class ReservationService {
@@ -37,23 +39,27 @@ public class ReservationService {
     }
 
     @Transactional
-    public Reservation save(ReservationRequest reservationRequest, Member loginMember) {
+    public ReservationResponse save(ReservationRequest reservationRequest, Member loginMember) {
         Time time = timeService.findById(reservationRequest.getTimeId());
         Theme theme = themeService.findById(reservationRequest.getThemeId());
         validationCheck(reservationRequest.getName(), reservationRequest.getDate(), time);
-        Reservation reservation = new Reservation(null, reservationRequest.getName(), reservationRequest.getDate(), theme, time, loginMember);
+        Reservation reservation = new Reservation(null, reservationRequest.getName(), reservationRequest.getDate(), reservationRequest.getStatus(), theme, time, null);
+        loginMember.connectWith(reservation);
         Long id = reservationRepository.save(reservation);
-        return findById(id);
+        Reservation savedReservation = findById(id);
+        return mapToReservationResponseDto(savedReservation);
     }
 
     @Transactional
-    public Reservation adminSave(AdminReservationRequest adminReservationRequest) {
+    public ReservationResponse adminSave(AdminReservationRequest adminReservationRequest) {
         Time time = timeService.findById(adminReservationRequest.getTimeId());
         Theme theme = themeService.findById(adminReservationRequest.getThemeId());
         Member member = memberService.findById(adminReservationRequest.getMemberId());
-        Reservation reservation = new Reservation(null, member.getName(), adminReservationRequest.getDate(), theme, time, member);
+        Reservation reservation = new Reservation(null, member.getName(), adminReservationRequest.getDate(), adminReservationRequest.getStatus(), theme, time, member);
+        member.connectWith(reservation);
         Long id = reservationRepository.save(reservation);
-        return findById(id);
+        Reservation savedReservation = findById(id);
+        return mapToReservationResponseDto(savedReservation);
     }
 
     @Transactional(readOnly = true)
@@ -62,8 +68,14 @@ public class ReservationService {
     }
 
     @Transactional(readOnly = true)
-    public List<Reservation> findAll() {
-        return reservationRepository.findAll();
+    public List<ReservationResponse> findAll() {
+        List<Reservation> reservations = reservationRepository.findAll();
+        return reservations.stream().map(this::mapToReservationResponseDto).collect(Collectors.toList());
+    }
+
+    public List<ReservationResponse> findAllByMemberId(Long id) {
+        List<Reservation> reservations = reservationRepository.findAllByMemberId(id);
+        return reservations.stream().map(this::mapToReservationResponseDto).toList();
     }
 
     @Transactional
@@ -76,5 +88,16 @@ public class ReservationService {
         reservationNameFormatCheck(name);
         reservationDateFormatCheck(date);
         isBeforeCheck(date, time.getStartAt());
+    }
+
+    private ReservationResponse mapToReservationResponseDto(Reservation reservation) {
+        return new ReservationResponse(
+                reservation.getId(),
+                reservation.getName(),
+                reservation.getDate(),
+                Status.findByDescription(reservation.getStatus()),
+                reservation.getTime(),
+                reservation.getTheme(),
+                reservation.getMember());
     }
 }

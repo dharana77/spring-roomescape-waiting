@@ -13,26 +13,29 @@ public class Reservation {
     private Long id;
     private String name;
     private String date;
+    private String status;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "theme_id")
     private Theme theme;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "time_id")
     private Time time;
 
-    @OneToOne
+
+    @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public Reservation(Long id, String name, String date, Theme theme, Time time, Member member) {
+    public Reservation(Long id, String name, String date, String status, Theme theme, Time time, Member member) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.theme = theme;
         this.time = time;
         this.member = member;
+        this.status = status;
     }
 
     public Reservation() {
@@ -50,6 +53,10 @@ public class Reservation {
         return date;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
     public Theme getTheme() {
         return theme;
     }
@@ -60,5 +67,9 @@ public class Reservation {
 
     public Member getMember() {
         return member;
+    }
+
+    public void connectWith(Member member) {
+        this.member = member;
     }
 }

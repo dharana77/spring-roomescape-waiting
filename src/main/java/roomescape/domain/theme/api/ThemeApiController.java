@@ -2,10 +2,9 @@ package roomescape.domain.theme.api;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import roomescape.domain.theme.service.ThemeService;
 import roomescape.domain.theme.service.dto.ThemeRequest;
 import roomescape.domain.theme.service.dto.ThemeResponse;
-import roomescape.domain.theme.domain.Theme;
-import roomescape.domain.theme.service.ThemeService;
 
 import java.util.List;
 
@@ -21,25 +20,14 @@ public class ThemeApiController {
 
     @PostMapping
     public ResponseEntity<ThemeResponse> save(@RequestBody ThemeRequest themeRequest) {
-        Theme theme = themeService.save(themeRequest);
-        return ResponseEntity.ok().body(new ThemeResponse(
-                theme.getId(),
-                theme.getName(),
-                theme.getDescription(),
-                theme.getThumbnail()
-        ));
+        ThemeResponse themeResponse = themeService.save(themeRequest);
+        return ResponseEntity.ok().body(themeResponse);
     }
 
     @GetMapping
     public ResponseEntity<List<ThemeResponse>> getThemes() {
-        List<Theme> themes = themeService.findAll();
-        List<ThemeResponse> responses = themes.stream().map(theme -> new ThemeResponse(
-                theme.getId(),
-                theme.getName(),
-                theme.getDescription(),
-                theme.getThumbnail())
-        ).toList();
-        return ResponseEntity.ok(responses);
+        List<ThemeResponse> themeResponses = themeService.findAll();
+        return ResponseEntity.ok(themeResponses);
     }
 
     @DeleteMapping("{id}")

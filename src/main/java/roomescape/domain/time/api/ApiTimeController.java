@@ -2,7 +2,6 @@ package roomescape.domain.time.api;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import roomescape.domain.time.domain.Time;
 import roomescape.domain.time.service.TimeService;
 import roomescape.domain.time.service.dto.TimeRequest;
 import roomescape.domain.time.service.dto.TimeResponse;
@@ -21,37 +20,20 @@ public class ApiTimeController {
 
     @PostMapping
     public ResponseEntity<TimeResponse> save(@RequestBody TimeRequest timeRequest) {
-        Time time = timeService.save(timeRequest);
-        return ResponseEntity.ok().body(
-                new TimeResponse(
-                        time.getId(),
-                        time.getStartAt()
-                )
-        );
+        TimeResponse timeResponse = timeService.save(timeRequest);
+        return ResponseEntity.ok().body(timeResponse);
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<TimeResponse>> findAll() {
-        List<Time> times = timeService.findAll();
-        List<TimeResponse> responses = times.stream().map(
-                time -> new TimeResponse(
-                        time.getId(),
-                        time.getStartAt()
-                )
-        ).toList();
-        return ResponseEntity.ok().body(responses);
+        List<TimeResponse> timeResponses = timeService.findAll();
+        return ResponseEntity.ok().body(timeResponses);
     }
 
     @GetMapping("/available")
     public ResponseEntity<List<TimeResponse>> findByThemeIdAndDate(@RequestParam("date") String date, @RequestParam("themeId") String themeId) {
-        List<Time> times = timeService.findByThemeIdAndDate(themeId, date);
-        List<TimeResponse> responses = times.stream().map(
-                time -> new TimeResponse(
-                        time.getId(),
-                        time.getStartAt()
-                )
-        ).toList();
-        return ResponseEntity.ok().body(responses);
+        List<TimeResponse> timeResponses = timeService.findByThemeIdAndDate(themeId, date);
+        return ResponseEntity.ok().body(timeResponses);
     }
 
     @DeleteMapping("/{id}")

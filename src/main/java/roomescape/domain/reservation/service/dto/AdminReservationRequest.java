@@ -9,6 +9,7 @@ public class AdminReservationRequest {
     private final Long timeId;
     private final Long memberId;
     private final Long themeId;
+    private final String status = "예약";
 
     @JsonCreator
     public AdminReservationRequest(
@@ -36,5 +37,9 @@ public class AdminReservationRequest {
 
     public Long getMemberId() {
         return memberId;
+    }
+
+    public String getStatus() {
+        return status;
     }
 }

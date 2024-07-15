@@ -22,6 +22,14 @@ public class ReservationJpaRepository implements ReservationRepository {
             JOIN FETCH r.member m
             WHERE r.id = :id
             """;
+    private static final String FIND_BY_MEMBER_ID_SQL = """
+            SELECT r
+            FROM Reservation r
+            INNER JOIN Theme th ON r.theme.id = th.id
+            INNER JOIN Time t ON r.time.id = t.id
+            INNER JOIN Member m ON r.member.id = m.id
+            WHERE r.member.id = :id
+            """;
     private static final String FIND_ALL_SQL = """
             SELECT r
             FROM Reservation r
@@ -53,6 +61,13 @@ public class ReservationJpaRepository implements ReservationRepository {
     @Override
     public List<Reservation> findAll() {
         TypedQuery<Reservation> query = entityManager.createQuery(FIND_ALL_SQL, Reservation.class);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Reservation> findAllByMemberId(Long memberId) {
+        TypedQuery<Reservation> query = entityManager.createQuery(FIND_BY_MEMBER_ID_SQL, Reservation.class);
+        query.setParameter(ID, memberId);
         return query.getResultList();
     }
 

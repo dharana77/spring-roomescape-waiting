@@ -1,9 +1,12 @@
 package roomescape.domain.member.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+
+import jakarta.persistence.*;
+import roomescape.domain.reservation.domain.Reservation;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
 public class Member {
@@ -15,6 +18,9 @@ public class Member {
     private String email;
     private String password;
     private String role;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reservation> reservations = new ArrayList<>();
 
     public Member(Long id, String name, String email, String password, String role) {
         this.id = id;
@@ -53,5 +59,10 @@ public class Member {
 
     public String getRole() {
         return role;
+    }
+
+    public void connectWith(Reservation reservation) {
+        reservations.add(reservation);
+        reservation.connectWith(this);
     }
 }

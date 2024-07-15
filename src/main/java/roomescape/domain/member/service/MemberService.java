@@ -9,10 +9,14 @@ import roomescape.domain.member.domain.Role;
 import roomescape.domain.member.domain.repository.MemberRepository;
 import roomescape.domain.member.error.exception.MemberErrorCode;
 import roomescape.domain.member.error.exception.MemberException;
+import roomescape.domain.member.service.dto.AdminMemberResponse;
 import roomescape.domain.member.service.dto.MemberLoginRequest;
 import roomescape.domain.member.service.dto.MemberRequest;
+import roomescape.domain.member.service.dto.MemberResponse;
 
 import java.util.List;
+
+import static roomescape.domain.member.utils.FormatCheckUtil.*;
 
 @Service
 public class MemberService {
@@ -41,9 +45,11 @@ public class MemberService {
     }
 
     @Transactional
-    public Member save(MemberRequest memberRequest) {
+    public MemberResponse save(MemberRequest memberRequest) {
+        validationCheck(memberRequest.getName(), memberRequest.getEmail(), memberRequest.getPassword());
         Long id = memberRepository.save(new Member(null, memberRequest.getName(), memberRequest.getEmail(), memberRequest.getPassword(), Role.USER.getRole()));
-        return findById(id);
+        Member member = findById(id);
+        return mapToMemberResponseDto(member);
     }
 
     @Transactional(readOnly = true)
@@ -52,18 +58,19 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public List<Member> findAll() {
+    public List<MemberResponse> findAll() {
         List<Member> members = memberRepository.findAll();
         if (members.isEmpty()) {
             throw new MemberException(MemberErrorCode.NO_MEMBER_ERROR);
         }
-        return members;
+        return members.stream().map(this::mapToMemberResponseDto).toList();
     }
 
     @Transactional
-    public Member updateAdminRole(Long memberId) {
+    public AdminMemberResponse updateAdminRole(Long memberId) {
         Long id = memberRepository.updateAdminRole(memberId);
-        return findById(id);
+        Member member = findById(id);
+        return mapToAdminMemberResponseDto(member);
     }
 
     private String encode(Member member) {
@@ -75,11 +82,25 @@ public class MemberService {
                 .compact();
     }
 
-    private static Long decode(String token) {
+    private void validationCheck(String name, String email, String password) {
+        memberNameFormatCheck(name);
+        memberEmailFormatCheck(email);
+        memberPasswordFormatCheck(password);
+    }
+
+    private Long decode(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()))
                 .build()
                 .parseClaimsJws(token)
                 .getBody().get(ID, Long.class);
+    }
+
+    private MemberResponse mapToMemberResponseDto(Member member) {
+        return new MemberResponse(member.getId(), member.getName());
+    }
+
+    private AdminMemberResponse mapToAdminMemberResponseDto(Member member) {
+        return new AdminMemberResponse(member.getId(), member.getName(), member.getRole());
     }
 }

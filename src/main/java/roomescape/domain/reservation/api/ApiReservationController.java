@@ -4,13 +4,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.argumentResolver.annotation.Login;
 import roomescape.domain.member.domain.Member;
-import roomescape.domain.reservation.domain.Reservation;
 import roomescape.domain.reservation.service.ReservationService;
 import roomescape.domain.reservation.service.dto.ReservationRequest;
 import roomescape.domain.reservation.service.dto.ReservationResponse;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/reservations")
@@ -24,29 +22,20 @@ public class ApiReservationController {
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getReservations() {
-        List<Reservation> reservations = reservationService.findAll();
-        List<ReservationResponse> responses = reservations.stream().map(reservation ->
-                new ReservationResponse(
-                        reservation.getId(),
-                        reservation.getName(),
-                        reservation.getDate(),
-                        reservation.getTime(),
-                        reservation.getTheme(),
-                        reservation.getMember())).collect(Collectors.toList());
-        return ResponseEntity.ok().body(responses);
+        List<ReservationResponse> reservationResponses = reservationService.findAll();
+        return ResponseEntity.ok().body(reservationResponses);
+    }
+
+    @GetMapping("/mine")
+    public ResponseEntity<List<ReservationResponse>> getReservationsByMember(@Login Member loginMember) {
+        List<ReservationResponse> myReservationResponses = reservationService.findAllByMemberId(loginMember.getId());
+        return ResponseEntity.ok().body(myReservationResponses);
     }
 
     @PostMapping
     public ResponseEntity<ReservationResponse> save(@Login Member loginMember, @RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation = reservationService.save(reservationRequest, loginMember);
-        return ResponseEntity.ok().body(
-                new ReservationResponse(
-                        reservation.getId(),
-                        reservation.getName(),
-                        reservation.getDate(),
-                        reservation.getTime(),
-                        reservation.getTheme(),
-                        reservation.getMember()));
+        ReservationResponse reservationResponse = reservationService.save(reservationRequest, loginMember);
+        return ResponseEntity.ok().body(reservationResponse);
     }
 
     @DeleteMapping("/{id}")

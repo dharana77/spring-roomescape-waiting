@@ -1,4 +1,4 @@
-package roomescape.utils;
+package roomescape.domain.reservation.utils;
 
 import roomescape.domain.time.error.exception.TimeErrorCode;
 import roomescape.domain.time.error.exception.TimeException;

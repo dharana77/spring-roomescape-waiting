@@ -7,8 +7,11 @@ import roomescape.domain.time.domain.repository.TimeRepository;
 import roomescape.domain.time.error.exception.TimeErrorCode;
 import roomescape.domain.time.error.exception.TimeException;
 import roomescape.domain.time.service.dto.TimeRequest;
+import roomescape.domain.time.service.dto.TimeResponse;
 
 import java.util.List;
+
+import static roomescape.domain.time.utils.FormatCheckUtil.startAtFormatCheck;
 
 @Service
 public class TimeService {
@@ -20,10 +23,12 @@ public class TimeService {
     }
 
     @Transactional
-    public Time save(TimeRequest timeRequest) {
+    public TimeResponse save(TimeRequest timeRequest) {
+        validationCheck(timeRequest.getStartAt());
         Time time = new Time(null, timeRequest.getStartAt());
         Long id = timeRepository.save(time);
-        return findById(id);
+        Time savedTime = findById(id);
+        return mapToTimeResponseDto(savedTime);
     }
 
     @Transactional
@@ -32,8 +37,9 @@ public class TimeService {
     }
 
     @Transactional(readOnly = true)
-    public List<Time> findAll() {
-        return timeRepository.findAll();
+    public List<TimeResponse> findAll() {
+        List<Time> times = timeRepository.findAll();
+        return times.stream().map(this::mapToTimeResponseDto).toList();
     }
 
     @Transactional
@@ -43,7 +49,19 @@ public class TimeService {
     }
 
     @Transactional(readOnly = true)
-    public List<Time> findByThemeIdAndDate(String themeId, String date) {
-        return timeRepository.findByThemeIdAndDate(themeId, date);
+    public List<TimeResponse> findByThemeIdAndDate(String themeId, String date) {
+        List<Time> times = timeRepository.findByThemeIdAndDate(themeId, date);
+        return times.stream().map(this::mapToTimeResponseDto).toList();
+    }
+
+    private void validationCheck(String startAt) {
+        startAtFormatCheck(startAt);
+    }
+
+    private TimeResponse mapToTimeResponseDto(Time time) {
+        return new TimeResponse(
+                time.getId(),
+                time.getStartAt()
+        );
     }
 }

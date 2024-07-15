@@ -5,8 +5,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-import static roomescape.utils.FormatCheckUtil.*;
-
 @Entity
 public class Theme {
 
@@ -18,7 +16,6 @@ public class Theme {
     private String thumbnail;
 
     public Theme(Long id, String name, String description, String thumbnail) {
-        validationCheck(name, description, thumbnail);
         this.id = id;
         this.name = name;
         this.description = description;
@@ -26,12 +23,6 @@ public class Theme {
     }
 
     public Theme() {
-    }
-
-    private static void validationCheck(String name, String description, String thumbnail) {
-        themeNameFormatCheck(name);
-        themeDescriptionCheck(description);
-        themeThumbnailFormatCheck(thumbnail);
     }
 
     public Long getId() {
