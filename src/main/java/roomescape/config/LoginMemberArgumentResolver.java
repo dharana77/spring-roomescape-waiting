@@ -35,12 +35,11 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         Cookie[] cookies = httpServletRequest == null ? null : httpServletRequest.getCookies();
 
         String token = CookieUtils.extractCookieValue(cookies, TOKEN);
+        Long memberId = Long.parseLong(jwtTokenProvider.getSubject(token));
 
         Claims body = jwtTokenProvider.getClaimsFromToken(token);
-        String email = jwtTokenProvider.getSubject(token);
-        String name = String.valueOf(body.get("name"));
         RoleType role = RoleType.fromName(String.valueOf(body.get("role")));
 
-        return new LoginMember(email, name, role);
+        return new LoginMember(memberId, role);
     }
 }

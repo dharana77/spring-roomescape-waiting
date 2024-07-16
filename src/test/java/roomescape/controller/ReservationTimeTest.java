@@ -15,19 +15,13 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.jdbc.Sql;
 import roomescape.exception.custom.DuplicateTimeException;
 import roomescape.exception.custom.ReservationTimeConflictException;
 import roomescape.fixture.DateFixture;
 
-@Sql("classpath:table_init.sql")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @DisplayName("예약시간 테스트")
-public class ReservationTimeTest {
+public class ReservationTimeTest extends DefaultTestBase {
 
     private static final String EMAIL = "test@email.com";
     private static final String PASSWORD = "1234";
@@ -190,6 +184,7 @@ public class ReservationTimeTest {
         예약을_생성한다(params, token);
 
         RestAssured.given().log().all()
+                .cookie("token", token)
                 .contentType(ContentType.JSON)
                 .when().get("/times/available?date=" + date + "&themeId=1")
                 .then().log().all()
