@@ -1,6 +1,7 @@
 package roomescape.support;
 
 import roomescape.apply.reservation.domain.Reservation;
+import roomescape.apply.reservation.ui.dto.ReservationAdminRequest;
 import roomescape.apply.reservation.ui.dto.ReservationRequest;
 import roomescape.apply.reservation.ui.dto.ReservationSearchParams;
 import roomescape.apply.reservationtime.domain.ReservationTime;
@@ -48,7 +49,11 @@ public class ReservationsFixture {
     }
 
     public static ReservationRequest reservationRequest(long timeId, long themeId) {
-        return new ReservationRequest("2099-01-12", timeId, themeId, 1L);
+        return new ReservationRequest("2099-01-12", timeId, themeId);
+    }
+
+    public static ReservationAdminRequest reservationAdminRequest(long timeId, long themeId, long memberId) {
+        return new ReservationAdminRequest("2099-01-12", timeId, themeId, memberId);
     }
 
     public static ReservationSearchParams reservationSearchParams(Long memberId) {

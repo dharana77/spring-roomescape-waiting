@@ -3,6 +3,8 @@ package roomescape.apply.theme.application;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import roomescape.apply.theme.application.handler.ThemeSaver;
+import roomescape.apply.theme.application.service.ThemeCommandService;
 import roomescape.apply.theme.domain.ThemeRepository;
 import roomescape.apply.theme.infra.InMemoryThemeRepository;
 import roomescape.apply.theme.ui.dto.ThemeRequest;
@@ -18,7 +20,7 @@ class ThemeSaverTest {
     @BeforeEach
     void setUp() {
         themeRepository = new InMemoryThemeRepository();
-        themeSaver = new ThemeSaver(themeRepository);
+        themeSaver = new ThemeSaver(new ThemeCommandService(themeRepository));
     }
 
     @Test

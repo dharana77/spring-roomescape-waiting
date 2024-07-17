@@ -1,17 +1,12 @@
 package roomescape.apply.reservation.domain;
 
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import roomescape.apply.reservation.domain.QReservation;
 import roomescape.apply.reservation.ui.dto.ReservationSearchParams;
 import roomescape.apply.reservationtime.domain.QReservationTime;
 import roomescape.apply.theme.domain.QTheme;
 
 import java.util.List;
-
-import static roomescape.apply.reservation.domain.QReservation.reservation;
 
 public class CustomReservationRepositoryImpl implements CustomReservationRepository {
 

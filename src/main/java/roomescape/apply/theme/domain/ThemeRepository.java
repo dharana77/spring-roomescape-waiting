@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface ThemeRepository {
 
-    Theme save(Theme reservationTime);
+    Theme save(Theme theme);
 
     List<Theme> findAll();
 

@@ -6,7 +6,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import roomescape.apply.auth.application.JwtTokenManager;
 import roomescape.apply.auth.application.MemberRolePathExtractor;
-import roomescape.apply.member.application.MemberFinder;
+import roomescape.apply.member.application.handler.MemberFinder;
 import roomescape.support.handler.LoginMemberArgumentResolver;
 import roomescape.support.handler.MemberRoleAccessInterceptor;
 

@@ -52,8 +52,7 @@ public class InMemoryReservationTimeRepository implements ReservationTimeReposit
     }
 
     @Override
-    public List<AvailableReservationTimeResponse> findReservationTimesWithIsReservedInDateAndThemeId(String date,
-                                                                                                     long themeId) {
+    public List<AvailableReservationTimeResponse> findAllReservedTimesByThemeIdAndDate(long themeId, String date) {
         var reservationTimes = map.values().stream().toList();
         var reservedTimeIds = reservationRepository.findAllFetchJoinThemeAndTime()
                 .stream()

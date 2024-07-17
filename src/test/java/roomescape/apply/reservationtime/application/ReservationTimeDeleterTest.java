@@ -4,19 +4,22 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.apply.member.domain.Member;
-import roomescape.apply.member.infra.InMemoryMemberRepository;
 import roomescape.apply.member.domain.MemberRepository;
-import roomescape.apply.reservation.application.ReservationFinder;
+import roomescape.apply.member.infra.InMemoryMemberRepository;
+import roomescape.apply.reservation.application.service.ReservationQueryService;
 import roomescape.apply.reservation.domain.Reservation;
-import roomescape.apply.reservation.infra.InMemoryReservationRepository;
 import roomescape.apply.reservation.domain.ReservationRepository;
+import roomescape.apply.reservation.infra.InMemoryReservationRepository;
 import roomescape.apply.reservationtime.application.exception.ReservationTimeReferencedException;
+import roomescape.apply.reservationtime.application.handler.ReservationTimeDeleter;
+import roomescape.apply.reservationtime.application.service.ReservationTimeCommandService;
+import roomescape.apply.reservationtime.application.service.ReservationTimeQueryService;
 import roomescape.apply.reservationtime.domain.ReservationTime;
-import roomescape.apply.reservationtime.infra.InMemoryReservationTimeRepository;
 import roomescape.apply.reservationtime.domain.ReservationTimeRepository;
+import roomescape.apply.reservationtime.infra.InMemoryReservationTimeRepository;
 import roomescape.apply.theme.domain.Theme;
-import roomescape.apply.theme.infra.InMemoryThemeRepository;
 import roomescape.apply.theme.domain.ThemeRepository;
+import roomescape.apply.theme.infra.InMemoryThemeRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -38,8 +41,9 @@ class ReservationTimeDeleterTest {
         reservationTimeRepository = new InMemoryReservationTimeRepository(reservationRepository);
         memberRepository = new InMemoryMemberRepository();
 
-        var reservationFinder = new ReservationFinder(reservationRepository);
-        reservationTimeDeleter = new ReservationTimeDeleter(reservationTimeRepository, reservationFinder);
+        reservationTimeDeleter = new ReservationTimeDeleter(new ReservationQueryService(reservationRepository),
+                new ReservationTimeQueryService(reservationTimeRepository),
+                new ReservationTimeCommandService(reservationTimeRepository));
     }
 
     @Test

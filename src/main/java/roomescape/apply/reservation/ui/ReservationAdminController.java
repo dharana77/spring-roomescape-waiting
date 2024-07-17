@@ -5,10 +5,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.apply.auth.application.annotation.NeedMemberRole;
 import roomescape.apply.member.domain.MemberRoleName;
-import roomescape.apply.reservation.application.ReservationCanceler;
-import roomescape.apply.reservation.application.ReservationFinder;
-import roomescape.apply.reservation.application.ReservationRecorder;
-import roomescape.apply.reservation.application.ReservationSearcher;
+import roomescape.apply.reservation.application.handler.ReservationCanceler;
+import roomescape.apply.reservation.application.handler.ReservationFinder;
+import roomescape.apply.reservation.application.handler.ReservationRecorder;
+import roomescape.apply.reservation.application.handler.ReservationSearcher;
+import roomescape.apply.reservation.ui.dto.CreateReservationResponse;
 import roomescape.apply.reservation.ui.dto.ReservationAdminRequest;
 import roomescape.apply.reservation.ui.dto.ReservationAdminResponse;
 import roomescape.apply.reservation.ui.dto.ReservationSearchParams;
@@ -41,7 +42,7 @@ public class ReservationAdminController {
 
     @PostMapping
     @NeedMemberRole({MemberRoleName.ADMIN})
-    public ResponseEntity<ReservationAdminResponse> adminAddReservation(@RequestBody ReservationAdminRequest request
+    public ResponseEntity<CreateReservationResponse> adminAddReservation(@RequestBody ReservationAdminRequest request
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(reservationRecorder.recordReservationBy(request));

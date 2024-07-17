@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.apply.reservation.infra.InMemoryReservationRepository;
+import roomescape.apply.reservationtime.application.handler.ReservationTimeSaver;
+import roomescape.apply.reservationtime.application.service.ReservationTimeCommandService;
 import roomescape.apply.reservationtime.domain.ReservationTimeRepository;
 import roomescape.apply.reservationtime.infra.InMemoryReservationTimeRepository;
 import roomescape.apply.reservationtime.ui.dto.ReservationTimeRequest;
@@ -19,7 +21,7 @@ class ReservationTimeSaverTest {
     @BeforeEach
     void setUp() {
         reservationTimeRepository = new InMemoryReservationTimeRepository(new InMemoryReservationRepository());
-        reservationTimeSaver = new ReservationTimeSaver(reservationTimeRepository);
+        reservationTimeSaver = new ReservationTimeSaver(new ReservationTimeCommandService(reservationTimeRepository));
     }
 
     @Test

@@ -6,9 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.apply.auth.application.annotation.NeedMemberRole;
 import roomescape.apply.member.domain.MemberRoleName;
-import roomescape.apply.theme.application.ThemeDeleter;
-import roomescape.apply.theme.application.ThemeFinder;
-import roomescape.apply.theme.application.ThemeSaver;
+import roomescape.apply.theme.application.handler.ThemeDeleter;
+import roomescape.apply.theme.application.handler.ThemeFinder;
+import roomescape.apply.theme.application.handler.ThemeSaver;
 import roomescape.apply.theme.ui.dto.ThemeRequest;
 import roomescape.apply.theme.ui.dto.ThemeResponse;
 

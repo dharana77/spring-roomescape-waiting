@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import roomescape.apply.member.domain.Member;
 import roomescape.apply.member.infra.InMemoryMemberRepository;
 import roomescape.apply.member.domain.MemberRepository;
+import roomescape.apply.reservation.application.handler.ReservationSearcher;
+import roomescape.apply.reservation.application.service.ReservationQueryService;
 import roomescape.apply.reservation.infra.InMemoryReservationRepository;
 import roomescape.apply.reservation.domain.ReservationRepository;
 import roomescape.apply.reservationtime.domain.ReservationTime;
@@ -39,7 +41,7 @@ class ReservationSearcherTest {
         reservationRepository = new InMemoryReservationRepository();
         reservationTimeRepository = new InMemoryReservationTimeRepository(reservationRepository);
 
-        reservationSearcher = new ReservationSearcher(reservationRepository);
+        reservationSearcher = new ReservationSearcher(new ReservationQueryService(reservationRepository));
     }
 
     @Test

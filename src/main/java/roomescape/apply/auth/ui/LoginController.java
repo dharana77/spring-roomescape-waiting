@@ -12,7 +12,7 @@ import roomescape.apply.auth.application.annotation.NeedMemberRole;
 import roomescape.apply.auth.ui.dto.LoginCheckResponse;
 import roomescape.apply.auth.ui.dto.LoginRequest;
 import roomescape.apply.auth.ui.dto.RedirectResponse;
-import roomescape.apply.member.application.MemberFinder;
+import roomescape.apply.member.application.handler.MemberFinder;
 import roomescape.apply.member.domain.MemberRoleName;
 
 @RestController

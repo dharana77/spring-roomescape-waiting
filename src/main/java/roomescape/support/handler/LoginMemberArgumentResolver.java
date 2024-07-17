@@ -9,7 +9,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import roomescape.apply.auth.application.JwtTokenManager;
 import roomescape.apply.auth.ui.dto.LoginMember;
-import roomescape.apply.member.application.MemberFinder;
+import roomescape.apply.member.application.handler.MemberFinder;
 import roomescape.support.ServletRequestTokenFinder;
 
 public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {

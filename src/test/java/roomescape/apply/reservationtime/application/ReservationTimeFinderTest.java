@@ -8,6 +8,8 @@ import roomescape.apply.member.domain.MemberRepository;
 import roomescape.apply.member.infra.InMemoryMemberRepository;
 import roomescape.apply.reservation.domain.ReservationRepository;
 import roomescape.apply.reservation.infra.InMemoryReservationRepository;
+import roomescape.apply.reservationtime.application.handler.ReservationTimeFinder;
+import roomescape.apply.reservationtime.application.service.ReservationTimeQueryService;
 import roomescape.apply.reservationtime.domain.ReservationTimeRepository;
 import roomescape.apply.reservationtime.infra.InMemoryReservationTimeRepository;
 import roomescape.apply.reservationtime.ui.dto.ReservationTimeResponse;
@@ -35,7 +37,7 @@ class ReservationTimeFinderTest {
         reservationTimeRepository = new InMemoryReservationTimeRepository(reservationRepository);
         themeRepository = new InMemoryThemeRepository();
         memberRepository = new InMemoryMemberRepository();
-        reservationTimeFinder = new ReservationTimeFinder(reservationTimeRepository);
+        reservationTimeFinder = new ReservationTimeFinder(new ReservationTimeQueryService(reservationTimeRepository));
     }
 
     @Test

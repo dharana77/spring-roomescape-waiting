@@ -3,8 +3,8 @@ package roomescape.apply.member.ui;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import roomescape.apply.member.application.MemberAdder;
-import roomescape.apply.member.application.MemberFinder;
+import roomescape.apply.member.application.handler.MemberAdder;
+import roomescape.apply.member.application.handler.MemberFinder;
 import roomescape.apply.member.ui.dto.MemberRequest;
 import roomescape.apply.member.ui.dto.MemberResponse;
 

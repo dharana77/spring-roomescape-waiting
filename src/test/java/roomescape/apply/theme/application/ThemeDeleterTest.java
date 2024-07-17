@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import roomescape.apply.member.domain.Member;
 import roomescape.apply.member.domain.MemberRepository;
 import roomescape.apply.member.infra.InMemoryMemberRepository;
-import roomescape.apply.reservation.application.ReservationFinder;
+import roomescape.apply.reservation.application.service.ReservationQueryService;
 import roomescape.apply.reservation.domain.Reservation;
 import roomescape.apply.reservation.domain.ReservationRepository;
 import roomescape.apply.reservation.infra.InMemoryReservationRepository;
@@ -14,6 +14,9 @@ import roomescape.apply.reservationtime.domain.ReservationTime;
 import roomescape.apply.reservationtime.domain.ReservationTimeRepository;
 import roomescape.apply.reservationtime.infra.InMemoryReservationTimeRepository;
 import roomescape.apply.theme.application.exception.ThemeReferencedException;
+import roomescape.apply.theme.application.handler.ThemeDeleter;
+import roomescape.apply.theme.application.service.ThemeCommandService;
+import roomescape.apply.theme.application.service.ThemeQueryService;
 import roomescape.apply.theme.domain.Theme;
 import roomescape.apply.theme.domain.ThemeRepository;
 import roomescape.apply.theme.infra.InMemoryThemeRepository;
@@ -38,8 +41,9 @@ class ThemeDeleterTest {
         reservationTimeRepository = new InMemoryReservationTimeRepository(reservationRepository);
         memberRepository = new InMemoryMemberRepository();
 
-        var reservationFinder = new ReservationFinder(reservationRepository);
-        themeDeleter = new ThemeDeleter(themeRepository, reservationFinder);
+        themeDeleter = new ThemeDeleter(new ThemeQueryService(themeRepository),
+                new ThemeCommandService(themeRepository),
+                new ReservationQueryService(reservationRepository));
     }
 
     @Test

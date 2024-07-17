@@ -15,6 +15,7 @@ import roomescape.apply.reservation.ui.dto.ReservationRequest;
 import roomescape.apply.reservation.ui.dto.ReservationResponse;
 import roomescape.apply.reservationtime.application.ReservationTimeFinder;
 import roomescape.apply.reservationtime.domain.ReservationTime;
+import roomescape.apply.reservationwaiting.domain.ReservationWaiting;
 import roomescape.apply.theme.application.ThemeFinder;
 import roomescape.apply.theme.domain.Theme;
 
@@ -65,12 +66,23 @@ public class ReservationRecorder {
         return ReservationAdminResponse.from(saved, theme, time, MemberResponse.from(member.getId(), member.getName()));
     }
 
+    @Transactional
+    public void recordReservationBy(ReservationWaiting reservationWaiting) {
+        final Member member = memberFinder.findOneNameById(reservationWaiting.getMemberId());
+        final Reservation reservation = Reservation.of(member.getName(),
+                                                       reservationWaiting.getReservationDate(),
+                                                       reservationWaiting.getTime(),
+                                                       reservationWaiting.getTheme(),
+                                                       member.getId());
+        reservation.reserve();
+        reservationRepository.save(reservation);
+    }
+
     private void validateNotDuplicateReservation(long timeId, long themeId) {
         boolean alreadyExisted = reservationFinder.doesReservationExist(timeId, themeId);
         if (alreadyExisted) {
             throw new DuplicateReservationException();
         }
     }
-
 
 }

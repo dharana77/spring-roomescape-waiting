@@ -3,6 +3,8 @@ package roomescape.apply.theme.application;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import roomescape.apply.theme.application.handler.ThemeFinder;
+import roomescape.apply.theme.application.service.ThemeQueryService;
 import roomescape.apply.theme.infra.InMemoryThemeRepository;
 import roomescape.apply.theme.domain.ThemeRepository;
 import roomescape.apply.theme.ui.dto.ThemeResponse;
@@ -20,7 +22,7 @@ class ThemeFinderTest {
     @BeforeEach
     void setUp() {
         themeRepository = new InMemoryThemeRepository();
-        themeFinder = new ThemeFinder(themeRepository);
+        themeFinder = new ThemeFinder(new ThemeQueryService(themeRepository));
     }
 
     @Test

@@ -33,9 +33,12 @@ public interface ReservationRepository {
                 WHERE
                     r.time.id = :timeId
                     AND r.theme.id = :themeId
+                    AND r.reservationDate.date = :date
                     AND r.reservationStatus = 'RESERVED'
             """)
-    Optional<Long> findReservedIdByTimeIdAndThemeId(@Param("timeId") long timeId, @Param("themeId") long themeId);
+    Optional<Long> findIdByThemeIdAndDateAndTimeId(@Param("themeId") long themeId,
+                                                   @Param("date") String date,
+                                                   @Param("timeId") long timeId);
 
     @Query("SELECT r.id FROM Reservation r WHERE r.time.id = :timeId")
     Optional<Long> findIdByTimeId(@Param("timeId") long timeId);
@@ -45,6 +48,15 @@ public interface ReservationRepository {
 
     List<Reservation> searchReservationsBySearchParams(ReservationSearchParams searchParams);
 
-    @Query("SELECT r FROM Reservation r WHERE r.memberId = :memberId")
+    @Query("""
+            SELECT
+                r
+            FROM
+                Reservation r
+                join FETCH r.theme
+                join FETCH r.time
+            WHERE
+                r.memberId = :memberId
+            """)
     List<Reservation> findAllByMemberId(@Param("memberId") long memberId);
 }

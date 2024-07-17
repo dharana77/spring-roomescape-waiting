@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import roomescape.apply.member.domain.Member;
 import roomescape.apply.member.domain.MemberRepository;
 import roomescape.apply.member.infra.InMemoryMemberRepository;
+import roomescape.apply.reservation.application.handler.ReservationFinder;
+import roomescape.apply.reservation.application.service.ReservationQueryService;
 import roomescape.apply.reservation.domain.Reservation;
 import roomescape.apply.reservation.domain.ReservationRepository;
 import roomescape.apply.reservation.infra.InMemoryReservationRepository;
@@ -13,6 +15,9 @@ import roomescape.apply.reservation.ui.dto.ReservationResponse;
 import roomescape.apply.reservationtime.domain.ReservationTime;
 import roomescape.apply.reservationtime.domain.ReservationTimeRepository;
 import roomescape.apply.reservationtime.infra.InMemoryReservationTimeRepository;
+import roomescape.apply.reservationwaiting.application.service.ReservationWaitingQueryService;
+import roomescape.apply.reservationwaiting.domain.ReservationWaitingRepository;
+import roomescape.apply.reservationwaiting.infra.InMemoryReservationWaitingRepository;
 import roomescape.apply.theme.domain.Theme;
 import roomescape.apply.theme.domain.ThemeRepository;
 import roomescape.apply.theme.infra.InMemoryThemeRepository;
@@ -26,11 +31,12 @@ import static roomescape.support.ReservationsFixture.*;
 
 class ReservationFinderTest {
 
+    private ThemeRepository themeRepository;
+    private MemberRepository memberRepository;
     private ReservationFinder reservationFinder;
     private ReservationRepository reservationRepository;
     private ReservationTimeRepository reservationTimeRepository;
-    private ThemeRepository themeRepository;
-    private MemberRepository memberRepository;
+    private ReservationWaitingRepository reservationWaitingRepository;
 
     @BeforeEach
     void setUp() {
@@ -38,8 +44,10 @@ class ReservationFinderTest {
         reservationTimeRepository = new InMemoryReservationTimeRepository(reservationRepository);
         themeRepository = new InMemoryThemeRepository();
         memberRepository = new InMemoryMemberRepository();
+        reservationWaitingRepository = new InMemoryReservationWaitingRepository();
 
-        reservationFinder = new ReservationFinder(reservationRepository);
+        reservationFinder = new ReservationFinder(new ReservationQueryService(reservationRepository),
+                new ReservationWaitingQueryService(reservationWaitingRepository));
     }
 
     @Test

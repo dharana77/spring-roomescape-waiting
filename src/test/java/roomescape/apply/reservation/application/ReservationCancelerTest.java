@@ -3,9 +3,13 @@ package roomescape.apply.reservation.application;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import roomescape.apply.member.application.service.MemberQueryService;
 import roomescape.apply.member.domain.Member;
 import roomescape.apply.member.domain.MemberRepository;
 import roomescape.apply.member.infra.InMemoryMemberRepository;
+import roomescape.apply.reservation.application.handler.ReservationCanceler;
+import roomescape.apply.reservation.application.service.ReservationCommandService;
+import roomescape.apply.reservation.application.service.ReservationQueryService;
 import roomescape.apply.reservation.domain.Reservation;
 import roomescape.apply.reservation.domain.ReservationRepository;
 import roomescape.apply.reservation.domain.ReservationStatus;
@@ -13,6 +17,8 @@ import roomescape.apply.reservation.infra.InMemoryReservationRepository;
 import roomescape.apply.reservationtime.domain.ReservationTime;
 import roomescape.apply.reservationtime.domain.ReservationTimeRepository;
 import roomescape.apply.reservationtime.infra.InMemoryReservationTimeRepository;
+import roomescape.apply.reservationwaiting.application.service.ReservationWaitingQueryService;
+import roomescape.apply.reservationwaiting.infra.InMemoryReservationWaitingRepository;
 import roomescape.apply.theme.domain.Theme;
 import roomescape.apply.theme.domain.ThemeRepository;
 import roomescape.apply.theme.infra.InMemoryThemeRepository;
@@ -38,7 +44,10 @@ class ReservationCancelerTest {
         themeRepository = new InMemoryThemeRepository();
         memberRepository = new InMemoryMemberRepository();
 
-        reservationCanceler = new ReservationCanceler(reservationRepository);
+        reservationCanceler = new ReservationCanceler(new MemberQueryService(memberRepository),
+                new ReservationQueryService(reservationRepository),
+                new ReservationCommandService(reservationRepository),
+                new ReservationWaitingQueryService(new InMemoryReservationWaitingRepository()));
     }
 
     @Test
