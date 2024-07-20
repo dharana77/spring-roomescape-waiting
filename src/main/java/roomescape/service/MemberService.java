@@ -3,7 +3,8 @@ package roomescape.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import roomescape.entities.Member;
-
+import roomescape.exceptions.ErrorCode;
+import roomescape.exceptions.RoomEscapeException;
 import roomescape.repositories.MemberRepository;
 import roomescape.ui.data.SignupRequest;
 
@@ -15,10 +16,12 @@ public class MemberService {
 
   public void save(SignupRequest signupRequest){
     memberRepository.save(
-      signupRequest.getName(), signupRequest.getEmail(), signupRequest.getEmail(), signupRequest.getRole());
+      new Member(signupRequest.getName(), signupRequest.getEmail(), signupRequest.getEmail()));
   }
 
   public Member findMemberByEmail(String email){
-    return memberRepository.findByEmail(email);
+    return memberRepository.findByEmail(email).orElseThrow(
+      () -> new RoomEscapeException(ErrorCode.INVALID_INPUT_VALUE, ErrorCode.INVALID_INPUT_VALUE.name()));
+
   }
 }
