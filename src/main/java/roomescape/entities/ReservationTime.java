@@ -1,11 +1,21 @@
 package roomescape.entities;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import roomescape.exceptions.ErrorCode;
 import roomescape.exceptions.RoomEscapeException;
 
+@Entity
 public class ReservationTime {
+
+  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String startAt;
+
+  public ReservationTime() {
+  }
 
   public ReservationTime(String startAt){
     if (!isValidStartAt(startAt)){
