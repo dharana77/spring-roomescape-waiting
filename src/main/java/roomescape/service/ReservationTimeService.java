@@ -28,8 +28,11 @@ public class ReservationTimeService {
     }
 
     public ReservationTime findById(Long id){
-        return reservationTimeRepository.findById(id);
-    }
+        return reservationTimeRepository.findById(id).orElseThrow(() -> new RoomEscapeException(
+          ErrorCode.NOT_FOUND,
+          "Reservation time not found"
+        ));
+    };
 
     public List<ReservationTime> findAllTimes(){
         return reservationTimeRepository.findAll();
